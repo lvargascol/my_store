@@ -1,5 +1,7 @@
 const faker = require('community-faker');
 const boom = require('@hapi/boom');
+const sequelize = require('../libs/sequelize');
+
 
 class ProductsService {
 
@@ -28,12 +30,11 @@ class ProductsService {
     this.products.push(newProduct);
     return newProduct;
   };
+
   async find() {
-    return new Promise((resolve,reject) => {
-      setTimeout(() => {
-        resolve(this.products);
-      },1000);
-    });
+    const query = 'SELECT * FROM tasks';
+    const [data] = await sequelize.query(query);
+    return data;
   };
   async findOne(id) {
     const product = this.products.find(item => item.id === id );
