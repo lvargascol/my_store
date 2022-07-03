@@ -9,40 +9,30 @@ const CategorySchema = {
     primaryKey: true,
     type: DataTypes.INTEGER,
   },
-  title: {
+  name: {
     allowNull: false,
     type: DataTypes.STRING,
     unique: true
   },
-  category: {
+  image: {
     allowNull: false,
     type: DataTypes.STRING
   },
-  price: {
+  createdAt: {
     allowNull: false,
-    type: DataTypes.INTEGER
-  },
-  minutes: {
-    allowNull: false,
-    type: DataTypes.INTEGER
-  },
-  image: {
-    allowNull: false,
-    type: DataTypes.STRING,
-    unique: true,
-    defaultValue: ""
-  },
-  description: {
-    allowNull: false,
-    type: DataTypes.TEXT,
-    defaultValue: ""
+    type: DataTypes.DATE,
+    field: 'create_at',
+    defaultValue: Sequelize.NOW
   }
 };
 
 class Category extends Model {
 
-  static associate() {
-    // associate
+  static associate(models) {
+    this.hasMany(models.Product, {
+      as: 'products',
+      foreignKey: 'categoryId'
+    });
   };
 
   static config(sequelize) {

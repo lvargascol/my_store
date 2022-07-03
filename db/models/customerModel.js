@@ -25,12 +25,6 @@ const CustomerSchema = {
     allowNull: true,
     type: DataTypes.STRING
   },
-  createdAt: {
-    allowNull: false,
-    type: DataTypes.DATE,
-    field: 'create_at',
-    defaultValue: Sequelize.NOW
-  },
   userId: {
     field: 'user_id',
     allowNull: false,
@@ -42,13 +36,23 @@ const CustomerSchema = {
     },
     onUpdate: 'CASCADE',
     onDelete: 'SET NULL'
+  },
+  createdAt: {
+    allowNull: false,
+    type: DataTypes.DATE,
+    field: 'create_at',
+    defaultValue: Sequelize.NOW
   }
 };
 
 class Customer extends Model {
 
   static associate(models) {
-    this.belongsTo(models.User, {as: 'user'})
+    this.belongsTo(models.User, {as: 'user'});
+    this.hasMany(models.Order, {
+      as: 'orders',
+      foreignKey: 'customerId'
+    });
   };
 
   static config(sequelize) {

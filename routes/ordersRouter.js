@@ -1,58 +1,62 @@
 const express = require('express');
-const CustomersService = require('../services/customersServices');
+const OrdersService = require('../services/ordersService');
 const { validatorHandler } = require('../middlewares/validatorHandler');
-const { createCustomerSchema, updateCustomerSchema, findOneCustomerSchema } = require('../schemas/customerSchema');
+const { createOrderSchema, updateOrderSchema, findOneOrderSchema, addItemSchema } = require('../schemas/orderSchema');
 
 const router = express.Router();
-const service = new CustomersService();
+const service = new OrdersService();
 
 router.get('/',
 async (req,res, next) => {
   try {
-    const users = await service.find();
-    res.json(users);
+    const orders = await service.find();
+    res.json(orders);
   } catch(error) {
     next(error);
   }
 });
 
 router.get('/:id',
-validatorHandler(findOneCustomerSchema,'params'),
+validatorHandler(findOneOrderSchema,'params'),
 async (req,res, next) => {
   try {
     const { id } = req.params;
-    const user = await service.findOne(id);
-    res.json(user);
+    const order = await service.findOne(id);
+    res.json(order);
   } catch(error) {
     next(error);
   }
 });
 
 router.post('/',
-validatorHandler(createCustomerSchema,'body'),
+validatorHandler(createOrderSchema,'body'),
 async (req,res, next) => {
   try {
     const body = req.body;
-    const newUser = await service.create(body);
-    res.json(newUser);
+    const newOrder = await service.create(body);
+    res.json(newOrder);
   } catch (error) {
     next(error);
   }
 });
 
-router.put('/:id', (req,res) => {
-  const {id} = req.params;
-  const body = req.body;
-  res.json({
-    message: 'updated',
-    data: body,
-    id
-  })
+router.post('/add-item',
+validatorHandler(addItemSchema,'body'),
+async (req,res, next) => {
+  try {
+    const body = req.body;
+    const newItem = await service.addItem(body);
+    res.json(newItem);
+  } catch (error) {
+    next(error);
+  }
 });
 
+
+
 router.patch('/:id',
-validatorHandler(findOneCustomerSchema,'params'),
-validatorHandler(updateCustomerSchema,'body'),
+validatorHandler(findOneOrderSchema,'params'),
+validatorHandler(updateOrderSchema,'body'),
 async (req,res, next) => {
   try {
     const {id} = req.params;
@@ -65,7 +69,7 @@ async (req,res, next) => {
 });
 
 router.delete('/:id',
-validatorHandler(findOneCustomerSchema,'params'),
+validatorHandler(findOneOrderSchema,'params'),
 async (req,res, next) => {
   try {
     const {id} = req.params;
