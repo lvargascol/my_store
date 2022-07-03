@@ -31,14 +31,16 @@ class ProductsService {
       include: ['category'],
       where: {}
     };
-    const { limit, offset, price, price_min, price_max } = query;
+    const { limit, offset } = query;
     if ( limit && offset) {
       options.limit = limit;
       options.offset = offset;
     };
+    const { price } = query;
     if (price) {
       options.where.price = price;
     };
+    const { price_min, price_max } = query;
     if (price_min && price_max) {
       options.where.price = {
         [Op.gte]: price_min,
